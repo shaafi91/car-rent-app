@@ -12,7 +12,7 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
-  final AuthController authController = Get.put(AuthController());
+  final AuthController authController = Get.find<AuthController>();
 
   final TextEditingController nameController = TextEditingController();
 
@@ -97,33 +97,56 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
               ),
               SizedBox(height: 30),
 
-              // Register Button
-              ElevatedButton(
-                onPressed: () {
-                  if (passwordController.text == confirmPasswordController.text) {
-                    authController.register(
-                      nameController.text,
-                      emailController.text,
-                      passwordController.text,
-                    );
-                    Get.snackbar('Success', 'Account created successfully');
-                    Get.to(() => LoginScreen());
-                  } else {
-                    Get.snackbar('Error', 'Passwords do not match');
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 15), backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  minimumSize: Size(double.infinity, 50),
-                ),
-                child: Text(
-                  'Register',
-                  style: TextStyle(fontSize: 18),
-                ),
+        // Register Button
+          ElevatedButton(
+            onPressed: () {
+              String name = nameController.text.trim();
+              String email = emailController.text.trim();
+              String password = passwordController.text;
+              String confirmPassword = confirmPasswordController.text;
+
+              // Name Validation
+              if (name.isEmpty) {
+                Get.snackbar('Error', 'Name cannot be empty', backgroundColor: Colors.red, colorText: Colors.white);
+                return;
+              }
+
+              // Email Validation
+              if (!GetUtils.isEmail(email)) {
+                Get.snackbar('Error', 'Invalid email format', backgroundColor: Colors.red, colorText: Colors.white);
+                return;
+              }
+
+              // Password Validation
+              if (password.length < 6) {
+                Get.snackbar('Error', 'Password must be at least 6 characters', backgroundColor: Colors.red, colorText: Colors.white);
+                return;
+              }
+
+              // Confirm Password Validation
+              if (password != confirmPassword) {
+                Get.snackbar('Error', 'Passwords do not match', backgroundColor: Colors.red, colorText: Colors.white);
+                return;
+              }
+
+              // If all validations pass, proceed with registration
+              authController.register(name, email, password);
+              Get.snackbar('Success', 'Account created successfully', backgroundColor: Colors.green, colorText: Colors.white);
+              Get.to(() => LoginScreen());
+            },
+            style: ElevatedButton.styleFrom(
+              padding: EdgeInsets.symmetric(vertical: 15), 
+              backgroundColor: Colors.blue,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
               ),
+              minimumSize: Size(double.infinity, 50),
+            ),
+            child: Text(
+              'Register',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
               SizedBox(height: 20),
 
               // Login Link

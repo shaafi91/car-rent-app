@@ -9,7 +9,7 @@ import '../models/car_model.dart';
 class BookingScreen extends StatelessWidget {
   final Car car; // Selected car passed from the Home Screen
   final BookingController bookingController =
-      Get.put(BookingController()); // Initialize the controller
+      Get.find<BookingController>(); // Initialize the controller
 
   BookingScreen({super.key, required this.car});
 

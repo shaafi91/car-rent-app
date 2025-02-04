@@ -61,27 +61,34 @@ class LoginScreen extends StatelessWidget {
               SizedBox(height: 30),
 
               // Login Button
-              ElevatedButton(
-                onPressed: () {
-                  authController.login(
-                      emailController.text, passwordController.text);
-                  if (authController.isLoggedIn.value) {
-                    Get.to(() => HomeScreen());
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  padding: EdgeInsets.symmetric(vertical: 15),
-                  backgroundColor: Colors.blue,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                ElevatedButton(
+                  onPressed: () async {
+                    bool success = await authController.login(
+                      emailController.text,
+                      passwordController.text,
+                    );
+
+                    if (success) {
+                      Get.snackbar('Success', 'Login successful!', backgroundColor: Colors.green, colorText: Colors.white);
+                      Get.to(() => HomeScreen());
+                    } else {
+                      Get.snackbar('Error', 'Invalid email or password', backgroundColor: Colors.red, colorText: Colors.white);
+                      
+                    }
+                  },
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 15),
+                    backgroundColor: Colors.blue,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    minimumSize: Size(double.infinity, 50),
                   ),
-                  minimumSize: Size(double.infinity, 50),
+                  child: Text(
+                    'Login',
+                    style: TextStyle(fontSize: 18),
+                  ),
                 ),
-                child: Text(
-                  'Login',
-                  style: TextStyle(fontSize: 18),
-                ),
-              ),
               SizedBox(height: 20),
 
               // Register Link
